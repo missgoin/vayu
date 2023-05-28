@@ -25,8 +25,8 @@ function exports() {
   export KBUILD_BUILD_USER="unknown"
   export PROCS=$(nproc --all)
   export DISTRO=$(source /etc/os-release && echo "${NAME}")
-  export LC_ALL=C && export USE_CCACHE=1
-  ccache -M 100G
+  #export LC_ALL=C && export USE_CCACHE=1
+  #ccache -M 100G
 
 # Variables
 KERVER=$(make kernelversion)
