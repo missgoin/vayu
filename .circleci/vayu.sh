@@ -181,7 +181,7 @@ START=$(date +"%s")
 	       CROSS_COMPILE=aarch64-linux-gnu- \
 	       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
 	       LLVM=1 \
-	       LLVM_IAS=1 \
+	       #LLVM_IAS=1 \
 	       #LD=${LINKER} \
 	       AR=llvm-ar \
 	       NM=llvm-nm \
@@ -232,7 +232,7 @@ function zipping() {
 	# Copy Files To AnyKernel3 Zip
 	cp $IMAGE AnyKernel3
 	cp $DTBO AnyKernel3
-	find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb
+	find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb.img
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
