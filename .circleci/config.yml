@@ -29,7 +29,7 @@ jobs:
             texinfo \
             u-boot-tools \
             xz-utils \
-            zlib1g-dev -m pip install networkx && pip3 install --upgrade gupload
+            zlib1g-dev
             git clone --depth=1 https://github.com/missgoin/vayu.git -b main builder_kernel
             cd builder_kernel
             bash .circleci/vayu.sh
