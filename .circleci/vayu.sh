@@ -36,7 +36,7 @@ TANGGAL=$(date +"%F%S")
 
 # Compiler and Build Information
 TOOLCHAIN=trb # List (clang = zycrom | azure | aosp | nexus15 | proton )
-LINKER=ld.lld # List ( ld.lld | ld.bfd | ld.gold | ld )
+LINKER=ld.gold # List ( ld.lld | ld.bfd | ld.gold | ld )
 VERBOSE=0
 ClangMoreStrings=AR=llvm-ar NM=llvm-nm AS=llvm-as STRIP=llvm-strip OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf HOSTAR=llvm-ar HOSTAS=llvm-as LD_LIBRARY_PATH="${KERNEL_DIR}/clang/lib" LD="${LINKER}" HOSTLD=ld.lld
 
