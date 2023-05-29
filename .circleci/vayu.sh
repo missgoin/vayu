@@ -36,8 +36,9 @@ TANGGAL=$(date +"%F%S")
 
 # Compiler and Build Information
 TOOLCHAIN=trb # List (clang = zycrom | azure | aosp | nexus15 | proton )
-#LINKER=ld # List ( ld.lld | ld.bfd | ld.gold | ld )
+LINKER=ld.lld # List ( ld.lld | ld.bfd | ld.gold | ld )
 VERBOSE=0
+ClangMoreStrings=AR=llvm-ar NM=llvm-nm AS=llvm-as STRIP=llvm-strip OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf HOSTAR=llvm-ar HOSTAS=llvm-as LD_LIBRARY_PATH="${KERNEL_DIR}/clang/lib" LD="${LINKER}" HOSTLD=ld.lld
 
 FINAL_ZIP=SUPER.KERNEL-${TANGGAL}.zip
 FINAL_ZIP_ALIAS=Kernulvay-${TANGGAL}.zip
@@ -77,6 +78,9 @@ PATH="${KERNEL_DIR}/clang/bin:${PATH}"
 
 # Export KBUILD_COMPILER_STRING
 export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
+export LLVM=1
+export LLVM_IAS=1
+
 }
 
 ##----------------------------------------------------------------##
@@ -85,7 +89,7 @@ function compile() {
 START=$(date +"%s")
 
 # Generate .config
-make O=out ARCH=arm64 ${DEFCONFIG} LLVM=1
+make O=out ARCH=arm64 ${DEFCONFIG}
 
 # Start Compilation
 if [[ "$TOOLCHAIN" == "azure" ]]; then
@@ -97,7 +101,7 @@ elif [[ "$TOOLCHAIN" == "nexus" ]]; then
 elif [[ "$TOOLCHAIN" == "neutron" ]]; then 
      make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
 elif [[ "$TOOLCHAIN" == "trb" ]]; then
-     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip V=$VERBOSE 2>&1 | tee error.log
+     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- HOSTCC=clang HOSTCXX=clang++ ${ClangMoreStrings} V=$VERBOSE 2>&1 | tee error.log
 fi
 	
 }
