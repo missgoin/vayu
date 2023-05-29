@@ -12,7 +12,9 @@ VERSION=10
 MODEL=Xiaomi
 DEVICE=vayu
 DEFCONFIG=${DEVICE}_defconfig
-IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+IMAGE=$(pwd)/out/arch/arm64/boot/Image
+DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
+DTB=$(pwd)/out/arch/arm64/boot/dts/qcom
 #C_BRANCH=$(git branch --show-current)
 
 ##----------------------------------------------------------##
@@ -109,6 +111,8 @@ fi
 function zipping() {
 # Copy Files To AnyKernel3 Zip
 cp $IMAGE AK3
+cp $DTBO AK3
+cp $DTBO AK3/dir
 
 # Zipping and Upload Kernel
 cd AK3 || exit 1
