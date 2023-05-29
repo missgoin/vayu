@@ -66,7 +66,7 @@ elif [[ $TOOLCHAIN == "neutron" ]]; then
        sudo apt install libelf-dev libarchive-tools
        bash -c "$(wget -O - https://gist.githubusercontent.com/dakkshesh07/240736992abf0ea6f0ee1d8acb57a400/raw/e97b505653b123b586fc09fda90c4076c8030732/patch-for-old-glibc.sh)"
 elif [[ $TOOLCHAIN == "trb" ]]; then
-       git clone --depth=1 https://gitlab.com/varunhardgamer/trb_clang.git -b 17 clang
+       git clone --depth=1 https://gitlab.com/chematelegram/clang-trb.git -b 17 clang
 fi
 
 # Get AnyKernel3
@@ -85,7 +85,7 @@ function compile() {
 START=$(date +"%s")
 
 # Generate .config
-make O=out ARCH=arm64 ${DEFCONFIG} LLVM=1 LLVM_IAS=1
+make O=out ARCH=arm64 ${DEFCONFIG} LLVM=1
 
 # Start Compilation
 if [[ "$TOOLCHAIN" == "azure" ]]; then
@@ -97,7 +97,7 @@ elif [[ "$TOOLCHAIN" == "nexus" ]]; then
 elif [[ "$TOOLCHAIN" == "neutron" ]]; then 
      make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
 elif [[ "$TOOLCHAIN" == "trb" ]]; then
-     make -j$(nproc --all) O=out ARCH=$ARCH CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 V=$VERBOSE 2>&1 | tee error.log
+     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip V=$VERBOSE 2>&1 | tee error.log
 fi
 	
 }
