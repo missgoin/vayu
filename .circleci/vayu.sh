@@ -104,7 +104,7 @@ function cloneTC() {
 	fi
 	
     # Clone AnyKernel
-    git clone --depth=1  https://github.com/Abhishek001konni/AnyKernel3.git
+    git clone --depth=1 https://github.com/missgoin/AnyKernel3.git
 
 	}
 	
@@ -180,7 +180,8 @@ START=$(date +"%s")
 	       HOSTCXX=clang++ \
 	       CROSS_COMPILE=aarch64-linux-gnu- \
 	       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-	       LLVM=1
+	       LLVM=1 \
+	       LLVM_IAS=1 \
 	       #LD=${LINKER} \
 	       AR=llvm-ar \
 	       NM=llvm-nm \
