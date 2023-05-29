@@ -67,7 +67,7 @@ elif [[ $TOOLCHAIN == "neutron" ]]; then
        sudo apt install libelf-dev libarchive-tools
        bash -c "$(wget -O - https://gist.githubusercontent.com/dakkshesh07/240736992abf0ea6f0ee1d8acb57a400/raw/e97b505653b123b586fc09fda90c4076c8030732/patch-for-old-glibc.sh)"
 elif [[ $TOOLCHAIN == "trb" ]]; then
-       git clone --depth=1 https://gitlab.com/chematelegram/clang-trb.git -b 17 clang
+       git clone --depth=1 https://gitlab.com/varunhardgamer/trb_clang.git -b 17 clang
 fi
 
 # Get AnyKernel3
