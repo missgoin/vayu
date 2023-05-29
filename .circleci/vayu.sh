@@ -52,7 +52,7 @@ COMPILER=trb
 
 ##----------------------------------------------------------##
 # Specify Linker
-LINKER=ld.lld
+#LINKER=ld.lld
 
 ##----------------------------------------------------------##
 
@@ -180,7 +180,8 @@ START=$(date +"%s")
 	       HOSTCXX=clang++ \
 	       CROSS_COMPILE=aarch64-linux-gnu- \
 	       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
-	       LD=${LINKER} \
+	       LLVM=1
+	       #LD=${LINKER} \
 	       AR=llvm-ar \
 	       NM=llvm-nm \
 	       OBJCOPY=llvm-objcopy \
