@@ -36,9 +36,9 @@ TANGGAL=$(date +"%F%S")
 
 # Compiler and Build Information
 TOOLCHAIN=trb # List (clang = zycrom | azure | aosp | nexus15 | proton )
-LINKER=ld.gold # List ( ld.lld | ld.bfd | ld.gold | ld )
+#LINKER=ld # List ( ld.lld | ld.bfd | ld.gold | ld )
 VERBOSE=0
-ClangMoreStrings=AR=llvm-ar NM=llvm-nm AS=llvm-as STRIP=llvm-strip OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf HOSTAR=llvm-ar HOSTAS=llvm-as LD_LIBRARY_PATH="${KERNEL_DIR}/clang/lib" LD="${LINKER}" HOSTLD=ld.lld
+ClangMoreStrings=AR=llvm-ar NM=llvm-nm AS=llvm-as STRIP=llvm-strip OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump READELF=llvm-readelf HOSTAR=llvm-ar HOSTAS=llvm-as HOSTLD=ld.lld
 
 FINAL_ZIP=SUPER.KERNEL-${TANGGAL}.zip
 FINAL_ZIP_ALIAS=Kernulvay-${TANGGAL}.zip
@@ -101,7 +101,7 @@ elif [[ "$TOOLCHAIN" == "nexus" ]]; then
 elif [[ "$TOOLCHAIN" == "neutron" ]]; then 
      make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- LLVM=1 LLVM_IAS=1 AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip CONFIG_NO_ERROR_ON_MISMATCH=y V=$VERBOSE 2>&1 | tee error.log
 elif [[ "$TOOLCHAIN" == "trb" ]]; then
-     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- HOSTCC=clang HOSTCXX=clang++ ${ClangMoreStrings} V=$VERBOSE 2>&1 | tee error.log
+     make -j$(nproc --all) O=out ARCH=arm64 CC=clang CROSS_COMPILE=aarch64-linux-gnu- CROSS_COMPILE_ARM32=arm-linux-gnueabi- ${ClangMoreStrings} V=$VERBOSE 2>&1 | tee error.log
 fi
 	
 }
