@@ -48,11 +48,11 @@ FINAL_ZIP_ALIAS=Karenulvay-${TANGGAL}.zip
 ##----------------------------------------------------------##
 # Specify compiler.
 
-COMPILER=trb
+COMPILER=cosmic
 
 ##----------------------------------------------------------##
 # Specify Linker
-#LINKER=ld.lld
+LINKER=ld.lld
 
 ##----------------------------------------------------------##
 
@@ -74,7 +74,12 @@ function cloneTC() {
     then
     git clone --depth=1 https://gitlab.com/varunhardgamer/trb_clang.git clang
     PATH="${KERNEL_DIR}/clang/bin:$PATH"
-
+    
+    elif [ $COMPILER = "cosmic" ];
+    then
+    git clone --depth=1 https://gitlab.com/PixelOS-Devices/playgroundtc.git -b 17 cosmic
+    PATH="${KERNEL_DIR}/cosmic/bin:$PATH"
+    
 	elif [ $COMPILER = "azure" ];
 	then
 	git clone --depth=1 https://gitlab.com/Panchajanya1999/azure-clang clang
@@ -107,7 +112,12 @@ function cloneTC() {
     git clone --depth=1 https://github.com/missgoin/AnyKernel3.git
 
 	}
-	
+
+
+# Speed up build process
+MAKE="./makeparallel"
+
+
 ##------------------------------------------------------##
 # Export Variables
 function exports() {
@@ -119,7 +129,10 @@ function exports() {
                export LD_LIBRARY_PATH="${KERNEL_DIR}/clang/lib:$LD_LIBRARY_PATH"
         elif [ -d ${KERNEL_DIR}/gcc64 ];
            then
-               export KBUILD_COMPILER_STRING=$("$KERNEL_DIR/gcc64"/bin/aarch64-elf-gcc --version | head -n 1)
+               export KBUILD_COMPILER_STRING=$("$KERNEL_DIR/gcc64"/bin/aarch64-elf-gcc --version | head -n 1)       
+        elif [ -d ${KERNEL_DIR}/cosmic ];
+           then
+               export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/cosmic/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')        
         elif [ -d ${KERNEL_DIR}/aosp-clang ];
             then
                export KBUILD_COMPILER_STRING=$(${KERNEL_DIR}/aosp-clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
@@ -147,7 +160,7 @@ function exports() {
 
 # Export Configs
 function configs() {
-    if [ -d ${KERNEL_DIR}/clang ] || [ -d ${KERNEL_DIR}/aosp-clang  ]; then
+    if [ -d ${KERNEL_DIR}/clang ] || [ -d ${KERNEL_DIR}/aosp-clang  ] || [ -d ${KERNEL_DIR}/cosmic  ]; then
        if [ $DISABLE_LTO = "1" ]; then
           sed -i 's/CONFIG_LTO_CLANG=y/# CONFIG_LTO_CLANG is not set/' arch/arm64/configs/${DEFCONFIG}
           sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/' arch/arm64/configs/${DEFCONFIG}
@@ -190,6 +203,22 @@ START=$(date +"%s")
 	       STRIP=llvm-strip \
 	       READELF=llvm-readelf \
 	       OBJSIZE=llvm-size \
+	       V=$VERBOSE 2>&1 | tee error.log
+	elif [ -d ${KERNEL_DIR}/cosmic ];
+	   then
+	       make -j$(nproc --all) O=out \
+	       ARCH=arm64 \
+	       CC=clang \
+           CROSS_COMPILE=aarch64-linux-gnu- \
+           CROSS_COMPILE_ARM32=arm-linux-gnueabi \
+           LLVM=1 \
+           LLVM_IAS=1 \
+           AR=llvm-ar \
+           NM=llvm-nm \
+           LD=${LINKER} \
+           OBJCOPY=llvm-objcopy \
+           OBJDUMP=llvm-objdump \
+           STRIP=llvm-strip \
 	       V=$VERBOSE 2>&1 | tee error.log
 	elif [ -d ${KERNEL_DIR}/gcc64 ];
 	   then
