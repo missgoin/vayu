@@ -24,7 +24,7 @@ DISABLE_LTO=0
 THIN_LTO=0
 
 # Files
-IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
 DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
 DTB=$(pwd)/out/arch/arm64/boot/dts/qcom
 
@@ -232,7 +232,7 @@ function zipping() {
 	# Copy Files To AnyKernel3 Zip
 	cp $IMAGE AnyKernel3
 	cp $DTBO AnyKernel3
-	find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb.img
+	#find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
