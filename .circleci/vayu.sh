@@ -24,7 +24,7 @@ DISABLE_LTO=0
 THIN_LTO=0
 
 # Files
-IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz-dtb
+IMAGE=$(pwd)/out/arch/arm64/boot/Image.gz
 DTBO=$(pwd)/out/arch/arm64/boot/dtbo.img
 DTB=$(pwd)/out/arch/arm64/boot/dts/qcom
 
@@ -176,20 +176,20 @@ START=$(date +"%s")
 	       make -kj$(nproc --all) O=out \
 	       ARCH=arm64 \
 	       CC=clang \
-	       HOSTCC=clang \
-	       HOSTCXX=clang++ \
+	       #HOSTCC=clang \
+	       #HOSTCXX=clang++ \
 	       CROSS_COMPILE=aarch64-linux-gnu- \
 	       CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
 	       LLVM=1 \
-	       #LLVM_IAS=1 \
+	       LLVM_IAS=1 \
 	       #LD=${LINKER} \
-	       AR=llvm-ar \
-	       NM=llvm-nm \
-	       OBJCOPY=llvm-objcopy \
-	       OBJDUMP=llvm-objdump \
-	       STRIP=llvm-strip \
-	       READELF=llvm-readelf \
-	       OBJSIZE=llvm-size \
+	       #AR=llvm-ar \
+	       #NM=llvm-nm \
+	       #OBJCOPY=llvm-objcopy \
+	       #OBJDUMP=llvm-objdump \
+	       #STRIP=llvm-strip \
+	       #READELF=llvm-readelf \
+	       #OBJSIZE=llvm-size \
 	       V=$VERBOSE 2>&1 | tee error.log
 	elif [ -d ${KERNEL_DIR}/gcc64 ];
 	   then
@@ -232,7 +232,7 @@ function zipping() {
 	# Copy Files To AnyKernel3 Zip
 	cp $IMAGE AnyKernel3
 	cp $DTBO AnyKernel3
-	#find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb
+	find $DTB -name "*.dtb" -exec cat {} + > AnyKernel3/dtb.img
 	
 	# Zipping and Push Kernel
 	cd AnyKernel3 || exit 1
